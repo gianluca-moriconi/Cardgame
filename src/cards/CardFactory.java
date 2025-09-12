@@ -1,8 +1,7 @@
 package cards; //PACKAGE CARDS
 
-import java.util.*;
-
 import core.*;
+import java.util.*;
 
 public class CardFactory { //CLASSE CARDFACTORY
 
@@ -25,11 +24,11 @@ public class CardFactory { //CLASSE CARDFACTORY
         List<Card> list = new ArrayList<>();
         switch (cls) {
             case BARDO -> list.add(new Card("Canto stonato (+1 danno prossimo attacco)", Phase.EXPLORATION, Set.of(ClassType.BARDO),
-                (g,p) -> { g.bonusDamage += 1; System.out.println(p.name+" esegue un Canto stonato. Bonus danno: +"+g.bonusDamage); }));
+                (g,p) -> { p.nextAttackBonus += 1; System.out.println(p.name+" esegue un Canto stonato. Bonus danno: +"+p.nextAttackBonus); }));
             case GUERRIERO -> list.add(new Card("Affila la lama (+1 danno prossimo attacco)", Phase.EXPLORATION, Set.of(ClassType.GUERRIERO),
-                (g,p) -> { g.bonusDamage += 1; System.out.println(p.name+" affila la lama. Bonus danno: +"+g.bonusDamage); }));
+                (g,p) -> { p.nextAttackBonus += 1; System.out.println(p.name+" affila la lama. Bonus danno: +"+p.nextAttackBonus); }));
             case MAGO -> list.add(new Card("Studia l'arcano (+1 danno prossimo attacco)", Phase.EXPLORATION, Set.of(ClassType.MAGO),
-                (g,p) -> { g.bonusDamage += 1; System.out.println(p.name+" studia l'arcano. Bonus danno: +"+g.bonusDamage); }));
+                (g,p) -> { p.nextAttackBonus += 1; System.out.println(p.name+" studia l'arcano. Bonus danno: +"+p.nextAttackBonus); }));
             case LADRO -> list.add(new Card("Tendi una trappola (Pozioni +1)", Phase.EXPLORATION, Set.of(ClassType.LADRO),
                 (g,p) -> { g.teamPotions++; System.out.println(p.name+" piazza una trappola. Pozioni: "+g.teamPotions); }));
         }
@@ -51,7 +50,7 @@ public class CardFactory { //CLASSE CARDFACTORY
         List<Card> list = new ArrayList<>();
         switch (cls) {
             case BARDO -> list.add(new Card("Ispirazione bardica (+2 al prossimo attacco)", Phase.COMBAT, Set.of(ClassType.BARDO),
-                (g,p) -> { g.bonusDamage += 2; System.out.println(p.name+" ispira il party! Bonus danno: +"+g.bonusDamage); }));
+                (g,p) -> { p.nextAttackBonus += 2; System.out.println(p.name+" ispira il party! Bonus danno: +"+p.nextAttackBonus); }));
             case GUERRIERO -> list.add(new Card("Colpo possente (4 danni)", Phase.COMBAT, Set.of(ClassType.GUERRIERO),
                 (g,p) -> g.dealDamage(4, p, "Colpo possente")));
             case MAGO -> list.add(new Card("Dardo incantato (3 danni sicuri)", Phase.COMBAT, Set.of(ClassType.MAGO),

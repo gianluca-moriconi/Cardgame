@@ -1,7 +1,7 @@
 package core; //PACKAGE CORE
 
-import java.util.*; //import libreria java util
-import cards.Card;  //import locale Card
+import cards.Card; //import libreria java util
+import java.util.*;  //import locale Card
 
 public class Player { //CLASSE GIOCATORE
     public final String name;   //Nome
@@ -9,7 +9,9 @@ public class Player { //CLASSE GIOCATORE
     public final ClassType cls; //Classe mazzo
 
     public int hp = 10; 		//Hp
-    
+    public int nextAttackBonus = 0; // bonus personale consumato al prossimo attacco
+
+
     //Dichiarazioni di campo 
     public final List<Card> hand = new ArrayList<>(); 				//List| Mano del giocatore
     public final Deque<Card> deckExploration = new ArrayDeque<>(); 	//Double-ended queue| Mazzo esplorazione

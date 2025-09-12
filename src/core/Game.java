@@ -1,7 +1,7 @@
 package core;
 
-import java.util.*;
 import cards.*;
+import java.util.*;
 
 public class Game {
     public final Random rng = new Random();
@@ -15,7 +15,7 @@ public class Game {
 
     // risorse semplici
     public int teamPotions = 0;
-    public int bonusDamage = 0;
+    
 
     public Monster monster = null;
 
@@ -79,11 +79,11 @@ public class Game {
             monster = new Monster(generateMonsterName(), 25 + rng.nextInt(11)); // 25-35
             System.out.println("\n>> Inizia la BATTAGLIA! Appare " + monster.name + " (HP: " + monster.hp + ")\n");
         } else {
-            // Reset post-battaglia / inizio esplorazione
-            bonusDamage = 0;   // ⬅️ azzera i bonus accumulati
-            monster = null;    // nessun mostro in esplorazione
-            System.out.println("\n>> Fase di ESPLORAZIONE (bonus danno resettato). Preparati a potenziarti per lo scontro!\n");
-        }
+            // reset di tutti i bonus personali a inizio esplorazione
+            for (Player pl : players) pl.nextAttackBonus = 0;
+            monster = null;
+            System.out.println("\n>> Fase di ESPLORAZIONE (bonus danno resettati). Preparati a potenziarti per lo scontro!\n");
+}
 
 
         for (Player p : players) ensureHand(p);
@@ -135,7 +135,7 @@ public class Game {
 
     private void doExplorationTurn(Player p) {
         ensureHand(p);
-        System.out.println("[Turno "+(turnInPhase+1)+"/16] "+p.name+" (HP:"+p.hp+") — Pozioni: "+teamPotions+" — BonusDmg: +"+bonusDamage);
+        System.out.println("\n[Turno "+(turnInPhase+1)+"/16] "+p.name+" (HP:"+p.hp+") — Pozioni: "+teamPotions+" — BonusDmg: +"+p.nextAttackBonus);
         if (p.human) {
             showHand(p);
             System.out.println("0) Passa");
@@ -150,7 +150,7 @@ public class Game {
 
     private void doCombatTurn(Player p) {
         ensureHand(p);
-        System.out.println("[Turno "+(turnInPhase+1)+"/16] "+p.name+" (HP:"+p.hp+") vs "+monster.name+" (HP:"+monster.hp+") — Pozioni: "+teamPotions+" — BonusDmg: +"+bonusDamage);
+        System.out.println("\n[Turno "+(turnInPhase+1)+"/16] "+p.name+" (HP:"+p.hp+") vs "+monster.name+" (HP:"+monster.hp+") — Pozioni: "+teamPotions+" — BonusDmg: +"+p.nextAttackBonus);
         if (p.human) {
             System.out.println("Azioni:");
             System.out.println("0) Passa");
@@ -229,7 +229,9 @@ public class Game {
     // ==== Effetti base usati dalle carte ====
     public void dealDamage(int base, Player src, String srcName) {
         if (monster == null) { System.out.println("…ma non c'è alcun mostro."); return; }
-        int extra = bonusDamage; bonusDamage = 0;
+        int extra = src.nextAttackBonus;
+        src.nextAttackBonus = 0; // consumato subito
+
         int total = Math.max(0, base + extra);
         monster.hp -= total;
         System.out.println(">>> "+src.name+" infligge "+total+" danni con \""+srcName+"\"" +
@@ -248,7 +250,7 @@ public class Game {
         if (turnInPhase >= 16) {
             phase = (phase == Phase.EXPLORATION) ? Phase.COMBAT : Phase.EXPLORATION;
             turnInPhase = 0;
-            bonusDamage = Math.min(bonusDamage, 5);
+             
             System.out.println("\n--- CAMBIO FASE -> " + phase + " ---");
             buildPhaseDecks(phase);
         }
