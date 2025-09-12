@@ -1,0 +1,64 @@
+package cards; //PACKAGE CARDS
+
+import java.util.*;
+
+import core.*;
+
+public class CardFactory { //CLASSE CARDFACTORY
+
+    // --- ESPLORAZIONE: generiche
+    public static List<Card> explorationGeneric(Game G) { 	//Metodo statico che restituisce una lista carte (explorationGeneric)
+        
+    	return List.of( //List.of crea una lista immutabile
+    			
+            new Card("Riposati 2 minuti (cura 2)", Phase.EXPLORATION, Set.of(), //Costruttore carta | Nome carta : Fase : Allowed=Set.of vuoto=mazzo generico
+                (g,p) -> g.heal(p, 2, "Riposa 2 minuti")), 	//Lambda che implementa BiConsumer<Game, Player> | 
+            											 	//quando giochi la carta, chiama heal sul Game passato a runtime (g) curando il player p di 2.
+           
+            new Card("Raccogli erbe (Pozioni +1)", Phase.EXPLORATION, Set.of(),
+                (g,p) -> { g.teamPotions++; System.out.println(p.name+" raccoglie erbe. Pozioni del party: "+g.teamPotions); })
+        );
+    }
+
+    // --- ESPLORAZIONE: per classe
+    public static List<Card> explorationByClass(Game G, ClassType cls) {
+        List<Card> list = new ArrayList<>();
+        switch (cls) {
+            case BARDO -> list.add(new Card("Canto stonato (+1 danno prossimo attacco)", Phase.EXPLORATION, Set.of(ClassType.BARDO),
+                (g,p) -> { g.bonusDamage += 1; System.out.println(p.name+" esegue un Canto stonato. Bonus danno: +"+g.bonusDamage); }));
+            case GUERRIERO -> list.add(new Card("Affila la lama (+1 danno prossimo attacco)", Phase.EXPLORATION, Set.of(ClassType.GUERRIERO),
+                (g,p) -> { g.bonusDamage += 1; System.out.println(p.name+" affila la lama. Bonus danno: +"+g.bonusDamage); }));
+            case MAGO -> list.add(new Card("Studia l'arcano (+1 danno prossimo attacco)", Phase.EXPLORATION, Set.of(ClassType.MAGO),
+                (g,p) -> { g.bonusDamage += 1; System.out.println(p.name+" studia l'arcano. Bonus danno: +"+g.bonusDamage); }));
+            case LADRO -> list.add(new Card("Tendi una trappola (Pozioni +1)", Phase.EXPLORATION, Set.of(ClassType.LADRO),
+                (g,p) -> { g.teamPotions++; System.out.println(p.name+" piazza una trappola. Pozioni: "+g.teamPotions); }));
+        }
+        return list;
+    }
+
+    // --- COMBATTIMENTO: generiche
+    public static List<Card> combatGeneric(Game G) {
+        return List.of(
+            new Card("Dai un calcio (2 danni)", Phase.COMBAT, Set.of(),
+                (g,p) -> g.dealDamage(2, p, "Dai un calcio")),
+            new Card("Colpo rapido (3 danni)", Phase.COMBAT, Set.of(),
+                (g,p) -> g.dealDamage(3, p, "Colpo rapido"))
+        );
+    }
+
+    // --- COMBATTIMENTO: per classe
+    public static List<Card> combatByClass(Game G, ClassType cls) {
+        List<Card> list = new ArrayList<>();
+        switch (cls) {
+            case BARDO -> list.add(new Card("Ispirazione bardica (+2 al prossimo attacco)", Phase.COMBAT, Set.of(ClassType.BARDO),
+                (g,p) -> { g.bonusDamage += 2; System.out.println(p.name+" ispira il party! Bonus danno: +"+g.bonusDamage); }));
+            case GUERRIERO -> list.add(new Card("Colpo possente (4 danni)", Phase.COMBAT, Set.of(ClassType.GUERRIERO),
+                (g,p) -> g.dealDamage(4, p, "Colpo possente")));
+            case MAGO -> list.add(new Card("Dardo incantato (3 danni sicuri)", Phase.COMBAT, Set.of(ClassType.MAGO),
+                (g,p) -> g.dealDamage(3, p, "Dardo incantato")));
+            case LADRO -> list.add(new Card("Pugnale furtivo (3-5 danni)", Phase.COMBAT, Set.of(ClassType.LADRO),
+                (g,p) -> g.dealDamage(g.rng.nextInt(3)+3, p, "Pugnale furtivo")));
+        }
+        return list;
+    }
+}
