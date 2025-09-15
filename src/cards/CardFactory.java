@@ -38,10 +38,10 @@ public class CardFactory { //CLASSE CARDFACTORY
     // --- COMBATTIMENTO: generiche
     public static List<Card> combatGeneric(Game G) {
         return List.of(
-            new Card("Dai un calcio (2 danni)", Phase.COMBAT, Set.of(),
-                (g,p) -> g.dealDamage(2, p, "Dai un calcio")),
-            new Card("Colpo rapido (3 danni)", Phase.COMBAT, Set.of(),
-                (g,p) -> g.dealDamage(3, p, "Colpo rapido"))
+            new Card("Dai un calcio (1 danni)", Phase.COMBAT, Set.of(),
+                (g,p) -> g.dealDamage(1, p, "Dai un calcio")),
+            new Card("Colpo rapido (2 danni)", Phase.COMBAT, Set.of(),
+                (g,p) -> g.dealDamage(2, p, "Colpo rapido"))
         );
     }
 
